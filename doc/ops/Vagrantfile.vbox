@@ -7,10 +7,23 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   config.vm.box = "ubuntu/xenial64"
 
-  # Run Ansible from the Vagrant Host
-  config.vm.provision "ansible" do |ansible|
-  # config.vm.provision "ansible_local" do |ansible|
+  # Run Ansible from the Vagrant Guest
+  config.vm.provision "ansible_local" do |ansible|
     ansible.playbook = "site.yml"
   end
+  
+  # use bigger ram 
+  config.vm.provider "virtualbox" do |vb|
+	  vb.memory = "1024"
+  end	  
 
+  # disable the default mount
+  config.vm.synced_folder ".", "/vagrant", \
+    :disabled => true
+
+  # mount the folder to workspace, use /vagrant as workspace
+  config.vm.synced_folder "../..", "/vagrant/src/github.com/xephonhq/xephon-b", \
+    :create => true, \
+    :disabled => false
+    
 end
